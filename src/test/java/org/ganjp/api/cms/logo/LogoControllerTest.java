@@ -111,4 +111,20 @@ class LogoControllerTest {
         mockMvc.perform(get("/v1/logos/view/corrupted.png"))
                 .andExpect(status().isInternalServerError());
     }
+    @org.junit.jupiter.api.io.TempDir
+    java.nio.file.Path tempDir;
+
+    @Test
+    void should_returnLogo_when_viewLogoSuccess() throws Exception {
+        // Given
+        java.io.File tempFile = tempDir.resolve("success.png").toFile();
+        java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
+        when(logoService.getLogoFile("success.png")).thenReturn(tempFile);
+
+        // When & Then
+        mockMvc.perform(get("/v1/logos/view/success.png"))
+                .andExpect(status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("content"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Content-Disposition", "inline; filename=\"success.png\""));
+    }
 }

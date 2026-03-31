@@ -109,13 +109,45 @@ class AudioControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @org.junit.jupiter.api.io.TempDir
+    java.nio.file.Path tempDir;
+
     @Test
-    void should_return404_when_servingMissingCoverImage() throws Exception {
+    void should_returnPartialContent_when_rangeHeaderProvided() throws Exception {
         // Given
-        when(audioService.getAudioCoverFile("missing.jpg")).thenThrow(new IllegalArgumentException("Not found"));
+        java.io.File tempFile = tempDir.resolve("test.mp3").toFile();
+        java.nio.file.Files.write(tempFile.toPath(), "0123456789".getBytes());
+        
+        when(audioService.getAudioFile("test.mp3")).thenReturn(tempFile);
+
+        // When & Then: Request bytes 0-3 (length 4)
+        mockMvc.perform(get("/v1/audios/view/test.mp3")
+                .header("Range", "bytes=0-3"))
+                .andExpect(status().isPartialContent())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Content-Range", "bytes 0-3/10"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("0123"));
+    }
+
+    @Test
+    void should_returnFullContent_when_noRangeHeader() throws Exception {
+        // Given
+        java.io.File tempFile = tempDir.resolve("full.mp3").toFile();
+        java.nio.file.Files.write(tempFile.toPath(), "full_content".getBytes());
+        when(audioService.getAudioFile("full.mp3")).thenReturn(tempFile);
 
         // When & Then
-        mockMvc.perform(get("/v1/audios/cover-images/missing.jpg"))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/v1/audios/view/full.mp3"))
+                .andExpect(status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("full_content"));
+    }
+
+    @Test
+    void should_return500_when_IOErrorReadingCoverImage() throws Exception {
+        // Given
+        when(audioService.getAudioCoverFile("fail.jpg")).thenThrow(new IOException("Disk failure"));
+
+        // When & Then
+        mockMvc.perform(get("/v1/audios/cover-images/fail.jpg"))
+                .andExpect(status().isInternalServerError());
     }
 }

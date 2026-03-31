@@ -71,28 +71,26 @@ public class CmsUtil {
         if (path == null || path.isBlank()) {
             return null;
         }
-        if (segment == null) {
-            segment = "";
+        if (path.startsWith("http")) {
+            return path;
         }
-        String seg = segment;
-        if (!seg.endsWith("/")) {
+        String seg = segment == null ? "" : segment;
+        while (seg.startsWith("/")) {
+            seg = seg.substring(1);
+        }
+        if (!seg.isEmpty() && !seg.endsWith("/")) {
             seg = seg + "/";
         }
+        String p = path.startsWith("/") ? path.substring(1) : path;
+        
         if (base != null && !base.isBlank()) {
             String prefix = base;
             if (!prefix.endsWith("/")) {
                 prefix = prefix + "/";
             }
-            if (prefix.endsWith("/") && seg.startsWith("/")) {
-                seg = seg.substring(1);
-            }
-            String p = path.startsWith("/") ? path.substring(1) : path;
             return prefix + seg + p;
         }
-        if (path.startsWith("http") || path.startsWith("/")) {
-            return path;
-        }
-        return "/" + seg + (path.startsWith("/") ? path.substring(1) : path);
+        return "/" + seg + p;
     }
 
     public static String determineContentType(String filename) {

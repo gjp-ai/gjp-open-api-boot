@@ -44,4 +44,40 @@ class PaginatedResponseTest {
         // Then
         assertThat(response.getTotalPages()).isZero();
     }
+
+    @Test
+    void should_returnZeroPages_when_sizeIsZero() {
+        // When
+        PaginatedResponse<String> response = PaginatedResponse.of(List.of("a"), 0, 0, 1);
+
+        // Then
+        assertThat(response.getTotalPages()).isZero();
+    }
+
+    @Test
+    void should_createFromSpringPage() {
+        // Given
+        org.springframework.data.domain.Page<String> springPage = new org.springframework.data.domain.PageImpl<>(
+            List.of("a", "b"), 
+            org.springframework.data.domain.PageRequest.of(1, 10), 
+            100
+        );
+
+        // When
+        PaginatedResponse<String> response = PaginatedResponse.of(springPage);
+
+        // Then
+        assertThat(response.getContent()).hasSize(2);
+        assertThat(response.getPage()).isEqualTo(1);
+        assertThat(response.getSize()).isEqualTo(10);
+        assertThat(response.getTotalElements()).isEqualTo(100);
+        assertThat(response.getTotalPages()).isEqualTo(10);
+    }
+
+    @Test
+    void should_supportAllArgsConstructor() {
+        PaginatedResponse<String> response = new PaginatedResponse<>(List.of("a"), 0, 10, 1, 1);
+        assertThat(response.getContent()).hasSize(1);
+        assertThat(response.getTotalPages()).isEqualTo(1);
+    }
 }

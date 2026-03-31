@@ -108,4 +108,20 @@ class FileControllerTest {
         mockMvc.perform(get("/v1/files/view/corrupted.zip"))
                 .andExpect(status().isInternalServerError());
     }
+    @org.junit.jupiter.api.io.TempDir
+    java.nio.file.Path tempDir;
+
+    @Test
+    void should_returnFile_when_viewFileSuccess() throws Exception {
+        // Given
+        java.io.File tempFile = tempDir.resolve("success.txt").toFile();
+        java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
+        when(fileService.getFileResource("success.txt")).thenReturn(tempFile);
+
+        // When & Then
+        mockMvc.perform(get("/v1/files/view/success.txt"))
+                .andExpect(status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("content"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Content-Disposition", "attachment; filename=\"success.txt\""));
+    }
 }

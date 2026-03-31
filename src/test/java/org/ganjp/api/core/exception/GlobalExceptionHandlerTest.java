@@ -36,6 +36,24 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.status.code").value(500))
                 .andExpect(jsonPath("$.status.message").value("Internal server error"));
     }
+
+    @Test
+    void should_handleNotFound_with404() throws Exception {
+        // When & Then
+        mockMvc.perform(get("/non-existent-path"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status.code").value(404))
+                .andExpect(jsonPath("$.status.message").value("Resource not found"));
+    }
+
+    @Test
+    void should_handleTypeMismatch_with400() throws Exception {
+        // When & Then
+        mockMvc.perform(get("/test/mismatch?id=not-a-number"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status.code").value(400))
+                .andExpect(jsonPath("$.status.message").value(org.hamcrest.Matchers.containsString("Invalid value")));
+    }
 }
 
 @RestController
@@ -48,5 +66,10 @@ class GlobalExceptionHandlerTestController {
     @GetMapping("/test/exception")
     public void throwException() throws Exception {
         throw new Exception("Test general error");
+    }
+
+    @GetMapping("/test/mismatch")
+    public void triggerMismatch(@org.springframework.web.bind.annotation.RequestParam int id) {
+        // Triggered by sending non-integer to id
     }
 }
