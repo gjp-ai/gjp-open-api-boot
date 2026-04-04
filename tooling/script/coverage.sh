@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ensure script is run from project root
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 echo "🚀 Starting Unit Test Coverage Generation..."
 
