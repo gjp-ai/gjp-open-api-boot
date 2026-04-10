@@ -7,7 +7,7 @@ import org.ganjp.api.core.model.PaginatedResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/articles")
+@RequestMapping("/open/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;

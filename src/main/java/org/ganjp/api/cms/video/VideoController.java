@@ -7,7 +7,7 @@ import org.ganjp.api.core.model.PaginatedResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/videos")
+@RequestMapping("/open/videos")
 @RequiredArgsConstructor
 public class VideoController {
     private final VideoService videoService;
@@ -34,7 +34,8 @@ public class VideoController {
     @GetMapping("/{id}")
     public ApiResponse<VideoResponse> getVideoById(@PathVariable String id) {
         VideoResponse resp = videoService.getVideoById(id);
-        if (resp == null) return ApiResponse.error(404, "Video not found", null);
+        if (resp == null)
+            return ApiResponse.error(404, "Video not found", null);
         return ApiResponse.success(resp, "Video retrieved");
     }
 }

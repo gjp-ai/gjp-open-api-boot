@@ -34,7 +34,7 @@ class AppSettingControllerTest {
         when(appSettingService.getAllAppSettings()).thenReturn(List.of(dto));
 
         // When & Then
-        mockMvc.perform(get("/v1/app-settings"))
+        mockMvc.perform(get("/open/app-settings"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].name").value("test"))
                 .andExpect(jsonPath("$.status.message").value("Public app settings retrieved successfully"));

@@ -24,107 +24,110 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ImageController.class)
 class ImageControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockitoBean
-    private ImageService imageService;
+        @MockitoBean
+        private ImageService imageService;
 
-    @Test
-    void should_returnPaginatedImages_when_getImages() throws Exception {
-        // Given
-        ImageResponse imageResponse = ImageResponse.builder()
-                .id("abc-123")
-                .name("Controller Test")
-                .build();
+        @Test
+        void should_returnPaginatedImages_when_getImages() throws Exception {
+                // Given
+                ImageResponse imageResponse = ImageResponse.builder()
+                                .id("abc-123")
+                                .name("Controller Test")
+                                .build();
 
-        PaginatedResponse<ImageResponse> paginatedData = PaginatedResponse.of(
-                List.of(imageResponse), 0, 20, 1
-        );
+                PaginatedResponse<ImageResponse> paginatedData = PaginatedResponse.of(
+                                List.of(imageResponse), 0, 20, 1);
 
-        when(imageService.getImages(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(paginatedData);
+                when(imageService.getImages(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                                anyString()))
+                                .thenReturn(paginatedData);
 
-        // When & Then
-        mockMvc.perform(get("/v1/images"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
-                .andExpect(jsonPath("$.data.totalElements").value(1));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/images"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
+                                .andExpect(jsonPath("$.data.totalElements").value(1));
+        }
 
-    @Test
-    void should_returnBadRequest_when_invalidLanguage() throws Exception {
-        // When & Then
-        mockMvc.perform(get("/v1/images?lang=INVALID_LANG"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(400))
-                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
-    }
+        @Test
+        void should_returnBadRequest_when_invalidLanguage() throws Exception {
+                // When & Then
+                mockMvc.perform(get("/open/images?lang=INVALID_LANG"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(400))
+                                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
+        }
 
-    @Test
-    void should_returnImageDetail_when_foundById() throws Exception {
-        // Given
-        ImageResponse detailResponse = ImageResponse.builder()
-                .id("def-456")
-                .name("Detail View")
-                .build();
+        @Test
+        void should_returnImageDetail_when_foundById() throws Exception {
+                // Given
+                ImageResponse detailResponse = ImageResponse.builder()
+                                .id("def-456")
+                                .name("Detail View")
+                                .build();
 
-        when(imageService.getImageById("def-456")).thenReturn(detailResponse);
+                when(imageService.getImageById("def-456")).thenReturn(detailResponse);
 
-        // When & Then
-        mockMvc.perform(get("/v1/images/def-456"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.id").value("def-456"))
-                .andExpect(jsonPath("$.data.name").value("Detail View"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/images/def-456"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.id").value("def-456"))
+                                .andExpect(jsonPath("$.data.name").value("Detail View"));
+        }
 
-    @Test
-    void should_returnNotFound_when_imageIdDoesNotExist() throws Exception {
-        // Given
-        when(imageService.getImageById("not-found")).thenReturn(null);
+        @Test
+        void should_returnNotFound_when_imageIdDoesNotExist() throws Exception {
+                // Given
+                when(imageService.getImageById("not-found")).thenReturn(null);
 
-        // When & Then
-        mockMvc.perform(get("/v1/images/not-found"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(404))
-                .andExpect(jsonPath("$.status.message").value("Image not found"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/images/not-found"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(404))
+                                .andExpect(jsonPath("$.status.message").value("Image not found"));
+        }
 
-    @Test
-    void should_return404_when_servingMissingImageFile() throws Exception {
-        // Given
-        when(imageService.getImageFile("ghost.jpg")).thenThrow(new IllegalArgumentException("Not found"));
+        @Test
+        void should_return404_when_servingMissingImageFile() throws Exception {
+                // Given
+                when(imageService.getImageFile("ghost.jpg")).thenThrow(new IllegalArgumentException("Not found"));
 
-        // When & Then
-        mockMvc.perform(get("/v1/images/view/ghost.jpg"))
-                .andExpect(status().isNotFound());
-    }
+                // When & Then
+                mockMvc.perform(get("/open/images/view/ghost.jpg"))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    void should_return500_when_IOErrorReadingImageFile() throws Exception {
-        // Given
-        when(imageService.getImageFile("corrupted.jpg")).thenThrow(new IOException("Disk error"));
+        @Test
+        void should_return500_when_IOErrorReadingImageFile() throws Exception {
+                // Given
+                when(imageService.getImageFile("corrupted.jpg")).thenThrow(new IOException("Disk error"));
 
-        // When & Then
-        mockMvc.perform(get("/v1/images/view/corrupted.jpg"))
-                .andExpect(status().isInternalServerError());
-    }
-    @org.junit.jupiter.api.io.TempDir
-    java.nio.file.Path tempDir;
+                // When & Then
+                mockMvc.perform(get("/open/images/view/corrupted.jpg"))
+                                .andExpect(status().isInternalServerError());
+        }
 
-    @Test
-    void should_returnImage_when_viewImageSuccess() throws Exception {
-        // Given
-        java.io.File tempFile = tempDir.resolve("success.png").toFile();
-        java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
-        when(imageService.getImageFile("success.png")).thenReturn(tempFile);
+        @org.junit.jupiter.api.io.TempDir
+        java.nio.file.Path tempDir;
 
-        // When & Then
-        mockMvc.perform(get("/v1/images/view/success.png"))
-                .andExpect(status().isOk())
-                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("content"))
-                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Content-Disposition", "inline; filename=\"success.png\""));
-    }
+        @Test
+        void should_returnImage_when_viewImageSuccess() throws Exception {
+                // Given
+                java.io.File tempFile = tempDir.resolve("success.png").toFile();
+                java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
+                when(imageService.getImageFile("success.png")).thenReturn(tempFile);
+
+                // When & Then
+                mockMvc.perform(get("/open/images/view/success.png"))
+                                .andExpect(status().isOk())
+                                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+                                                .string("content"))
+                                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header()
+                                                .string("Content-Disposition", "inline; filename=\"success.png\""));
+        }
 }

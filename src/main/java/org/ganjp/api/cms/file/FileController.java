@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/v1/files")
+@RequestMapping("/open/files")
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
@@ -33,7 +33,8 @@ public class FileController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "displayOrder") String sort,
             @RequestParam(defaultValue = "asc") String direction) {
-        org.ganjp.api.cms.file.File.Language language = CmsUtil.parseLanguage(lang, org.ganjp.api.cms.file.File.Language.class);
+        org.ganjp.api.cms.file.File.Language language = CmsUtil.parseLanguage(lang,
+                org.ganjp.api.cms.file.File.Language.class);
         if (lang != null && !lang.isBlank() && language == null) {
             return ApiResponse.error(400, "Invalid lang", null);
         }

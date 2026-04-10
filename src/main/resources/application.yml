@@ -1,14 +1,14 @@
 server:
   port: 8084
   servlet:
-    context-path: /ai-open-api/
+    context-path: /ai-api/
 
 spring:
   application:
     name: GJP-PUBLIC-API-BOOT
   profiles:
-    # active: dev
-    active: prod
+    active: dev
+    # active: prod
   jackson:
     serialization:
       write-dates-as-timestamps: false
@@ -29,25 +29,25 @@ cms:
 
 article:
   cover-image:
-    base-url: ${cms.base-url}/v1/articles/cover-images/
+    base-url: ${cms.base-url}/open/articles/cover-images/
     upload:
       directory: ${cms.upload.root-directory}/articles/cover-images
   content-image:
-    base-url: ${cms.base-url}/v1/articles/content-images/
+    base-url: ${cms.base-url}/open/articles/content-images/
     upload:
       directory: ${cms.upload.root-directory}/articles/content-images
 
 audio:
-  base-url: ${cms.base-url}/v1/audios/
+  base-url: ${cms.base-url}/open/audios/
   cover-image:
-    base-url: ${cms.base-url}/v1/audios/cover-images/
+    base-url: ${cms.base-url}/open/audios/cover-images/
   upload:
     directory: ${cms.upload.root-directory}/audios
 
 video:
-  base-url: ${cms.base-url}/v1/videos/
+  base-url: ${cms.base-url}/open/videos/
   cover-image:
-    base-url: ${cms.base-url}/v1/videos/cover-images/
+    base-url: ${cms.base-url}/open/videos/cover-images/
   upload:
     directory: ${cms.upload.root-directory}/videos
     max-file-size: 524288000
@@ -57,7 +57,7 @@ video:
       max-resolution: 720
 
 image:
-  base-url: ${cms.base-url}/v1/images/view/
+  base-url: ${cms.base-url}/open/images/view/
   upload:
     directory: ${cms.upload.root-directory}/images
     max-file-size: 10485760
@@ -66,13 +66,13 @@ image:
       thumbnail-size: 400
 
 file:
-  base-url: ${cms.base-url}/v1/files/view/
+  base-url: ${cms.base-url}/open/files/view/
   upload:
     directory: ${cms.upload.root-directory}/files
     max-file-size: 52428800
 
 logo: 
-  base-url: ${cms.base-url}/v1/logos/view/
+  base-url: ${cms.base-url}/open/logos/view/
   upload:
     directory: ${cms.upload.root-directory}/logos
     max-file-size: 5242880

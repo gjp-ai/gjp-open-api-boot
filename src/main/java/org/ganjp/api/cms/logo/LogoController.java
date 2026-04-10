@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/v1/logos")
+@RequestMapping("/open/logos")
 @RequiredArgsConstructor
 @Slf4j
 public class LogoController {

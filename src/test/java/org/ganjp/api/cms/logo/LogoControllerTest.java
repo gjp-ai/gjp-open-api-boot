@@ -24,107 +24,110 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(LogoController.class)
 class LogoControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockitoBean
-    private LogoService logoService;
+        @MockitoBean
+        private LogoService logoService;
 
-    @Test
-    void should_returnPaginatedLogos_when_getLogos() throws Exception {
-        // Given
-        LogoResponse logoResponse = LogoResponse.builder()
-                .id("abc-123")
-                .name("Logo Test")
-                .build();
+        @Test
+        void should_returnPaginatedLogos_when_getLogos() throws Exception {
+                // Given
+                LogoResponse logoResponse = LogoResponse.builder()
+                                .id("abc-123")
+                                .name("Logo Test")
+                                .build();
 
-        PaginatedResponse<LogoResponse> paginatedData = PaginatedResponse.of(
-                List.of(logoResponse), 0, 20, 1
-        );
+                PaginatedResponse<LogoResponse> paginatedData = PaginatedResponse.of(
+                                List.of(logoResponse), 0, 20, 1);
 
-        when(logoService.getLogos(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(paginatedData);
+                when(logoService.getLogos(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                                anyString()))
+                                .thenReturn(paginatedData);
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
-                .andExpect(jsonPath("$.data.totalElements").value(1));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/logos"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
+                                .andExpect(jsonPath("$.data.totalElements").value(1));
+        }
 
-    @Test
-    void should_returnBadRequest_when_invalidLanguage() throws Exception {
-        // When & Then
-        mockMvc.perform(get("/v1/logos?lang=INVALID_LANG"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(400))
-                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
-    }
+        @Test
+        void should_returnBadRequest_when_invalidLanguage() throws Exception {
+                // When & Then
+                mockMvc.perform(get("/open/logos?lang=INVALID_LANG"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(400))
+                                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
+        }
 
-    @Test
-    void should_returnLogoDetail_when_foundById() throws Exception {
-        // Given
-        LogoResponse detailResponse = LogoResponse.builder()
-                .id("def-456")
-                .name("Detail View")
-                .build();
+        @Test
+        void should_returnLogoDetail_when_foundById() throws Exception {
+                // Given
+                LogoResponse detailResponse = LogoResponse.builder()
+                                .id("def-456")
+                                .name("Detail View")
+                                .build();
 
-        when(logoService.getLogoById("def-456")).thenReturn(detailResponse);
+                when(logoService.getLogoById("def-456")).thenReturn(detailResponse);
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos/def-456"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.id").value("def-456"))
-                .andExpect(jsonPath("$.data.name").value("Detail View"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/logos/def-456"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.id").value("def-456"))
+                                .andExpect(jsonPath("$.data.name").value("Detail View"));
+        }
 
-    @Test
-    void should_returnNotFound_when_logoIdDoesNotExist() throws Exception {
-        // Given
-        when(logoService.getLogoById("not-found")).thenReturn(null);
+        @Test
+        void should_returnNotFound_when_logoIdDoesNotExist() throws Exception {
+                // Given
+                when(logoService.getLogoById("not-found")).thenReturn(null);
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos/not-found"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(404))
-                .andExpect(jsonPath("$.status.message").value("Logo not found"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/logos/not-found"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(404))
+                                .andExpect(jsonPath("$.status.message").value("Logo not found"));
+        }
 
-    @Test
-    void should_return404_when_servingMissingLogoFile() throws Exception {
-        // Given
-        when(logoService.getLogoFile("ghost.png")).thenThrow(new IllegalArgumentException("Not found"));
+        @Test
+        void should_return404_when_servingMissingLogoFile() throws Exception {
+                // Given
+                when(logoService.getLogoFile("ghost.png")).thenThrow(new IllegalArgumentException("Not found"));
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos/view/ghost.png"))
-                .andExpect(status().isNotFound());
-    }
+                // When & Then
+                mockMvc.perform(get("/open/logos/view/ghost.png"))
+                                .andExpect(status().isNotFound());
+        }
 
-    @Test
-    void should_return500_when_IOErrorReadingLogoFile() throws Exception {
-        // Given
-        when(logoService.getLogoFile("corrupted.png")).thenThrow(new IOException("Disk error"));
+        @Test
+        void should_return500_when_IOErrorReadingLogoFile() throws Exception {
+                // Given
+                when(logoService.getLogoFile("corrupted.png")).thenThrow(new IOException("Disk error"));
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos/view/corrupted.png"))
-                .andExpect(status().isInternalServerError());
-    }
-    @org.junit.jupiter.api.io.TempDir
-    java.nio.file.Path tempDir;
+                // When & Then
+                mockMvc.perform(get("/open/logos/view/corrupted.png"))
+                                .andExpect(status().isInternalServerError());
+        }
 
-    @Test
-    void should_returnLogo_when_viewLogoSuccess() throws Exception {
-        // Given
-        java.io.File tempFile = tempDir.resolve("success.png").toFile();
-        java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
-        when(logoService.getLogoFile("success.png")).thenReturn(tempFile);
+        @org.junit.jupiter.api.io.TempDir
+        java.nio.file.Path tempDir;
 
-        // When & Then
-        mockMvc.perform(get("/v1/logos/view/success.png"))
-                .andExpect(status().isOk())
-                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("content"))
-                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Content-Disposition", "inline; filename=\"success.png\""));
-    }
+        @Test
+        void should_returnLogo_when_viewLogoSuccess() throws Exception {
+                // Given
+                java.io.File tempFile = tempDir.resolve("success.png").toFile();
+                java.nio.file.Files.write(tempFile.toPath(), "content".getBytes());
+                when(logoService.getLogoFile("success.png")).thenReturn(tempFile);
+
+                // When & Then
+                mockMvc.perform(get("/open/logos/view/success.png"))
+                                .andExpect(status().isOk())
+                                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+                                                .string("content"))
+                                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header()
+                                                .string("Content-Disposition", "inline; filename=\"success.png\""));
+        }
 }

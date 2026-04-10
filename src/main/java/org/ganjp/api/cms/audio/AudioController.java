@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 @RestController
-@RequestMapping("/v1/audios")
+@RequestMapping("/open/audios")
 @RequiredArgsConstructor
 @Slf4j
 public class AudioController {
@@ -48,13 +48,14 @@ public class AudioController {
     @GetMapping("/{id}")
     public ApiResponse<AudioResponse> getAudioById(@PathVariable String id) {
         AudioResponse r = audioService.getAudioById(id);
-        if (r == null) return ApiResponse.error(404, "Audio not found", null);
+        if (r == null)
+            return ApiResponse.error(404, "Audio not found", null);
         return ApiResponse.success(r, "Audio retrieved");
     }
 
     @GetMapping("/view/{filename}")
     public ResponseEntity<?> viewAudio(@PathVariable String filename,
-                                       @RequestHeader(value = "Range", required = false) String rangeHeader) {
+            @RequestHeader(value = "Range", required = false) String rangeHeader) {
         try {
             CmsUtil.validateFilename(filename);
             return serveStreamable(audioService.getAudioFile(filename), filename, rangeHeader);
@@ -130,18 +131,22 @@ public class AudioController {
 
         @Override
         public int read() throws IOException {
-            if (remaining <= 0) return -1;
+            if (remaining <= 0)
+                return -1;
             int b = raf.read();
-            if (b != -1) remaining--;
+            if (b != -1)
+                remaining--;
             return b;
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
-            if (remaining <= 0) return -1;
+            if (remaining <= 0)
+                return -1;
             int toRead = (int) Math.min(len, remaining);
             int r = raf.read(b, off, toRead);
-            if (r > 0) remaining -= r;
+            if (r > 0)
+                remaining -= r;
             return r;
         }
 

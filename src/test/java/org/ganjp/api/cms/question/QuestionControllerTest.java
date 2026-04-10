@@ -20,71 +20,71 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(QuestionController.class)
 class QuestionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockitoBean
-    private QuestionService questionService;
+        @MockitoBean
+        private QuestionService questionService;
 
-    @Test
-    void should_returnPaginatedQuestions_when_getQuestions() throws Exception {
-        // Given
-        QuestionResponse questionResponse = QuestionResponse.builder()
-                .id("abc-123")
-                .question("Controller Test")
-                .build();
+        @Test
+        void should_returnPaginatedQuestions_when_getQuestions() throws Exception {
+                // Given
+                QuestionResponse questionResponse = QuestionResponse.builder()
+                                .id("abc-123")
+                                .question("Controller Test")
+                                .build();
 
-        PaginatedResponse<QuestionResponse> paginatedData = PaginatedResponse.of(
-                List.of(questionResponse), 0, 20, 1
-        );
+                PaginatedResponse<QuestionResponse> paginatedData = PaginatedResponse.of(
+                                List.of(questionResponse), 0, 20, 1);
 
-        when(questionService.getQuestions(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(paginatedData);
+                when(questionService.getQuestions(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(),
+                                anyString(), anyString()))
+                                .thenReturn(paginatedData);
 
-        // When & Then
-        mockMvc.perform(get("/v1/questions"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
-                .andExpect(jsonPath("$.data.totalElements").value(1));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/questions"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
+                                .andExpect(jsonPath("$.data.totalElements").value(1));
+        }
 
-    @Test
-    void should_returnBadRequest_when_invalidLanguage() throws Exception {
-        // When & Then
-        mockMvc.perform(get("/v1/questions?lang=INVALID_LANG"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(400))
-                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
-    }
+        @Test
+        void should_returnBadRequest_when_invalidLanguage() throws Exception {
+                // When & Then
+                mockMvc.perform(get("/open/questions?lang=INVALID_LANG"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(400))
+                                .andExpect(jsonPath("$.status.message").value("Invalid lang"));
+        }
 
-    @Test
-    void should_returnQuestionDetail_when_foundById() throws Exception {
-        // Given
-        QuestionResponse detailResponse = QuestionResponse.builder()
-                .id("def-456")
-                .question("Detail View")
-                .build();
+        @Test
+        void should_returnQuestionDetail_when_foundById() throws Exception {
+                // Given
+                QuestionResponse detailResponse = QuestionResponse.builder()
+                                .id("def-456")
+                                .question("Detail View")
+                                .build();
 
-        when(questionService.getQuestionById("def-456")).thenReturn(detailResponse);
+                when(questionService.getQuestionById("def-456")).thenReturn(detailResponse);
 
-        // When & Then
-        mockMvc.perform(get("/v1/questions/def-456"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(200))
-                .andExpect(jsonPath("$.data.id").value("def-456"))
-                .andExpect(jsonPath("$.data.question").value("Detail View"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/questions/def-456"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(200))
+                                .andExpect(jsonPath("$.data.id").value("def-456"))
+                                .andExpect(jsonPath("$.data.question").value("Detail View"));
+        }
 
-    @Test
-    void should_returnNotFound_when_questionIdDoesNotExist() throws Exception {
-        // Given
-        when(questionService.getQuestionById("not-found")).thenReturn(null);
+        @Test
+        void should_returnNotFound_when_questionIdDoesNotExist() throws Exception {
+                // Given
+                when(questionService.getQuestionById("not-found")).thenReturn(null);
 
-        // When & Then
-        mockMvc.perform(get("/v1/questions/not-found"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.code").value(404))
-                .andExpect(jsonPath("$.status.message").value("Question not found"));
-    }
+                // When & Then
+                mockMvc.perform(get("/open/questions/not-found"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status.code").value(404))
+                                .andExpect(jsonPath("$.status.message").value("Question not found"));
+        }
 }
