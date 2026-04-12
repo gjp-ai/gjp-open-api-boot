@@ -25,8 +25,8 @@ if [[ -z "${MYSQL_PASSWORD:-}" ]]; then
     export MYSQL_PASSWORD
 fi
 
-# ── Resolve project directory ────────────────────────────────────────────────
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# ── Resolve project directory (script is now in root) ─────────────────────────
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${PROJECT_DIR}"
 
 # ── Parse arguments ─────────────────────────────────────────────────────────
