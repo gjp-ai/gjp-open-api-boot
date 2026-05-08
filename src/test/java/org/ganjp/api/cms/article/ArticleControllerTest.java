@@ -4,9 +4,12 @@ import org.ganjp.api.core.model.PaginatedResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -14,6 +17,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,5 +95,34 @@ class ArticleControllerTest {
                                                             // ResponseEntity.ok(ApiResponse.error(...)) implicitly
                                 .andExpect(jsonPath("$.status.code").value(404))
                                 .andExpect(jsonPath("$.status.message").value("Article not found"));
+        }
+
+        @Test
+        void should_returnFullCoverImage_when_noRangeHeader() throws Exception {
+                File coverFile = Files.createTempFile("article-cover-full", ".png").toFile();
+                Files.write(coverFile.toPath(), "cover-image".getBytes());
+                when(articleService.getCoverImageFileByFilename("cover.png")).thenReturn(coverFile);
+
+                mockMvc.perform(get("/open/articles/cover-images/cover.png"))
+                                .andExpect(status().isOk())
+                                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                                                "inline; filename=\"cover.png\""))
+                                .andExpect(header().longValue(HttpHeaders.CONTENT_LENGTH, 11))
+                                .andExpect(content().bytes("cover-image".getBytes()));
+        }
+
+        @Test
+        void should_returnCoverImageRange_when_rangeHeaderPresent() throws Exception {
+                File coverFile = Files.createTempFile("article-cover-range", ".png").toFile();
+                Files.write(coverFile.toPath(), "0123456789".getBytes());
+                when(articleService.getCoverImageFileByFilename("cover.png")).thenReturn(coverFile);
+
+                mockMvc.perform(get("/open/articles/cover-images/cover.png")
+                                .header(HttpHeaders.RANGE, "bytes=3-6"))
+                                .andExpect(status().isPartialContent())
+                                .andExpect(header().string(HttpHeaders.ACCEPT_RANGES, "bytes"))
+                                .andExpect(header().string(HttpHeaders.CONTENT_RANGE, "bytes 3-6/10"))
+                                .andExpect(header().longValue(HttpHeaders.CONTENT_LENGTH, 4))
+                                .andExpect(content().bytes("3456".getBytes()));
         }
 }
