@@ -20,11 +20,13 @@ public class ArticleService {
     private final ArticleProperties articleProperties;
 
     public PaginatedResponse<ArticleResponse> getArticles(String title, Article.Language language, String tags,
-            Boolean isActive, int page, int size, String sort, String direction) {
+            Boolean isIncludeContent, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
         Page<Article> pageResult = articleRepository.searchArticles(title, language, tags, isActive, pageable);
 
-        List<ArticleResponse> list = pageResult.getContent().stream().map(this::mapToListResponse).toList();
+        List<ArticleResponse> list = pageResult.getContent().stream()
+                .map(article -> mapToListResponse(article, isIncludeContent))
+                .toList();
 
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(),
                 pageResult.getTotalElements());
@@ -46,11 +48,12 @@ public class ArticleService {
         return coverPath.toFile();
     }
 
-    private ArticleResponse mapToListResponse(Article article) {
+    private ArticleResponse mapToListResponse(Article article, Boolean isIncludeContent) {
         return ArticleResponse.builder()
                 .id(article.getId())
                 .title(article.getTitle())
                 .summary(article.getSummary())
+                .content(Boolean.TRUE.equals(isIncludeContent) ? article.getContent() : "")
                 .originalUrl(article.getOriginalUrl())
                 .sourceName(article.getSourceName())
                 .coverImageOriginalUrl(article.getCoverImageOriginalUrl())

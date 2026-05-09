@@ -19,6 +19,7 @@ public class ArticleResponse {
     private String id;
     private String title;
     private String summary;
+    private String content;
     private String originalUrl;
     private String sourceName;
     private String coverImageOriginalUrl;

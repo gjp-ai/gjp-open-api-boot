@@ -31,6 +31,7 @@ public class ArticleController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) Boolean isIncludeContent,
             @RequestParam(required = false) Boolean isActive,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -40,7 +41,8 @@ public class ArticleController {
         if (lang != null && !lang.isBlank() && language == null)
             return ApiResponse.error(400, "Invalid lang", null);
         return ApiResponse.success(
-                articleService.getArticles(title, language, tags, isActive, page, size, sort, direction),
+                articleService.getArticles(title, language, tags, isIncludeContent, isActive, page, size, sort,
+                        direction),
                 "Articles retrieved");
     }
 
