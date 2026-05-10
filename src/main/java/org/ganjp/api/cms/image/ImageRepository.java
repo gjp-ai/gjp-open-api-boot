@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, String> {
@@ -20,6 +21,17 @@ public interface ImageRepository extends JpaRepository<Image, String> {
                              @Param("tags") String tags,
                              @Param("isActive") Boolean isActive,
                              Pageable pageable);
+
+    @Query("SELECT i FROM Image i WHERE " +
+        "(:name IS NULL OR LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+        "(:lang IS NULL OR i.lang = :lang) AND " +
+        "(:tags IS NULL OR i.tags LIKE CONCAT('%', :tags, '%')) AND " +
+        "(:isActive IS NULL OR i.isActive = :isActive) " +
+        "ORDER BY i.displayOrder ASC")
+    List<Image> findAllImages(@Param("name") String name,
+                             @Param("lang") Image.Language lang,
+                             @Param("tags") String tags,
+                             @Param("isActive") Boolean isActive);
 
     Optional<Image> findByIdAndIsActiveTrue(String id);
 

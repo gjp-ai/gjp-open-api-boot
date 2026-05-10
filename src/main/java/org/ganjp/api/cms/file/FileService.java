@@ -32,6 +32,12 @@ public class FileService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
+    public List<FileResponse> getAllFiles(String name, org.ganjp.api.cms.file.File.Language lang, String tags, Boolean isActive) {
+        return fileRepository.findAllFiles(name, lang, tags, isActive).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public FileResponse getFileById(String id) {
         return fileRepository.findById(id)
                 .map(this::mapToResponse)

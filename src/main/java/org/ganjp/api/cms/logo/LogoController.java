@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/open/logos")
@@ -42,7 +43,19 @@ public class LogoController {
                 "Logos retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<LogoResponse>> getAllLogos(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Logo.Language language = CmsUtil.parseLanguage(lang, Logo.Language.class);
+        return ApiResponse.success(
+                logoService.getAllLogos(name, language, tags, isActive),
+                "All logos retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<LogoResponse> getLogoById(@PathVariable String id) {
         LogoResponse resp = logoService.getLogoById(id);
         if (resp == null) {

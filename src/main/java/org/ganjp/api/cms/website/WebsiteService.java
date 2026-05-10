@@ -27,6 +27,12 @@ public class WebsiteService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
+    public List<WebsiteResponse> getAllWebsites(String name, Website.Language lang, String tags, Boolean isActive) {
+        return websiteRepository.findAllWebsites(name, lang, tags, isActive).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public WebsiteResponse getWebsiteById(String id) {
         return websiteRepository.findById(id)
                 .map(this::mapToResponse)

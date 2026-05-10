@@ -32,6 +32,13 @@ public class ArticleService {
                 pageResult.getTotalElements());
     }
 
+    public List<ArticleResponse> getAllArticles(String title, Article.Language lang, String tags,
+            Boolean isActive) {
+        return articleRepository.findAllArticles(title, lang, tags, isActive).stream()
+                .map(article -> mapToListResponse(article, true))
+                .toList();
+    }
+
     public ArticleDetailResponse getArticleById(String id) {
         return articleRepository.findById(id)
                 .map(this::mapToDetailResponse)

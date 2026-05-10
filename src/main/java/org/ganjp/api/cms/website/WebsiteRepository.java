@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface WebsiteRepository extends JpaRepository<Website, String> {
 
@@ -21,5 +23,18 @@ public interface WebsiteRepository extends JpaRepository<Website, String> {
         @Param("tags") String tags,
         @Param("isActive") Boolean isActive,
         Pageable pageable
+    );
+
+    @Query("SELECT w FROM Website w WHERE " +
+           "(:name IS NULL OR LOWER(w.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+           "(:lang IS NULL OR w.lang = :lang) AND " +
+           "(:tags IS NULL OR w.tags LIKE CONCAT('%', :tags, '%')) AND " +
+           "(:isActive IS NULL OR w.isActive = :isActive) " +
+           "ORDER BY w.displayOrder ASC")
+    List<Website> findAllWebsites(
+        @Param("name") String name,
+        @Param("lang") Website.Language lang,
+        @Param("tags") String tags,
+        @Param("isActive") Boolean isActive
     );
 }

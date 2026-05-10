@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,7 +48,19 @@ public class ArticleController {
                 "Articles retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<ArticleResponse>> getAllArticles(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Article.Language language = CmsUtil.parseLanguage(lang, Article.Language.class);
+        return ApiResponse.success(
+                articleService.getAllArticles(title, language, tags, isActive),
+                "All articles retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<ArticleDetailResponse> getArticleById(@PathVariable String id) {
         ArticleDetailResponse resp = articleService.getArticleById(id);
         if (resp == null) {

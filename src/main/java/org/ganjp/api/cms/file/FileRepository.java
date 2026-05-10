@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface FileRepository extends JpaRepository<File, String> {
 
     @Query("SELECT f FROM File f WHERE " +
@@ -18,6 +20,17 @@ public interface FileRepository extends JpaRepository<File, String> {
                            @Param("tags") String tags,
                            @Param("isActive") Boolean isActive,
                            Pageable pageable);
+
+    @Query("SELECT f FROM File f WHERE " +
+            "(:name IS NULL OR LOWER(f.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+            "(:lang IS NULL OR f.lang = :lang) AND " +
+            "(:tags IS NULL OR f.tags LIKE CONCAT('%', :tags, '%')) AND " +
+            "(:isActive IS NULL OR f.isActive = :isActive) " +
+            "ORDER BY f.displayOrder ASC")
+    List<File> findAllFiles(@Param("name") String name,
+                           @Param("lang") File.Language lang,
+                           @Param("tags") String tags,
+                           @Param("isActive") Boolean isActive);
 
     boolean existsByFilename(String filename);
 }

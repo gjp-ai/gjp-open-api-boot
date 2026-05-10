@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/open/videos")
@@ -41,7 +42,19 @@ public class VideoController {
                 "Videos retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<VideoResponse>> getAllVideos(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Video.Language language = CmsUtil.parseLanguage(lang, Video.Language.class);
+        return ApiResponse.success(
+                videoService.getAllVideos(name, language, tags, isActive),
+                "All videos retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<VideoResponse> getVideoById(@PathVariable String id) {
         VideoResponse resp = videoService.getVideoById(id);
         if (resp == null)

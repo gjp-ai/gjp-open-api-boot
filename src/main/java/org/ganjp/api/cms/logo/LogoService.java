@@ -33,6 +33,12 @@ public class LogoService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
+    public List<LogoResponse> getAllLogos(String name, Logo.Language lang, String tags, Boolean isActive) {
+        return logoRepository.findAllLogos(name, lang, tags, isActive).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public LogoResponse getLogoById(String id) {
         return logoRepository.findById(id)
                 .map(this::mapToResponse)

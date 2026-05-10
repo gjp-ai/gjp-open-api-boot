@@ -6,6 +6,8 @@ import org.ganjp.api.core.model.ApiResponse;
 import org.ganjp.api.core.model.PaginatedResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/open/questions")
 @RequiredArgsConstructor
@@ -31,7 +33,19 @@ public class QuestionController {
                 "Questions retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<QuestionResponse>> getAllQuestions(
+            @RequestParam(required = false) String question,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Question.Language language = CmsUtil.parseLanguage(lang, Question.Language.class);
+        return ApiResponse.success(
+                questionService.getAllQuestions(question, language, tags, isActive),
+                "All questions retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<QuestionResponse> getQuestionById(@PathVariable String id) {
         QuestionResponse resp = questionService.getQuestionById(id);
         if (resp == null) {

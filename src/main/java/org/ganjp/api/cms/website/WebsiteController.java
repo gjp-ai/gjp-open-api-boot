@@ -6,6 +6,8 @@ import org.ganjp.api.core.model.ApiResponse;
 import org.ganjp.api.core.model.PaginatedResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/open/websites")
 @RequiredArgsConstructor
@@ -31,7 +33,19 @@ public class WebsiteController {
                 "Websites retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<WebsiteResponse>> getAllWebsites(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Website.Language language = CmsUtil.parseLanguage(lang, Website.Language.class);
+        return ApiResponse.success(
+                websiteService.getAllWebsites(name, language, tags, isActive),
+                "All websites retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<WebsiteResponse> getWebsiteById(@PathVariable String id) {
         WebsiteResponse resp = websiteService.getWebsiteById(id);
         if (resp == null) {

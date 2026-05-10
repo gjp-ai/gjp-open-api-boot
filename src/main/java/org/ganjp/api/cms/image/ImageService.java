@@ -33,6 +33,12 @@ public class ImageService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
+    public List<ImageResponse> getAllImages(String name, Image.Language lang, String tags, Boolean isActive) {
+        return imageRepository.findAllImages(name, lang, tags, isActive).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public ImageResponse getImageById(String id) {
         return imageRepository.findByIdAndIsActiveTrue(id)
                 .map(this::mapToResponse)

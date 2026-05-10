@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 @RestController
 @RequestMapping("/open/audios")
@@ -45,7 +46,19 @@ public class AudioController {
                 "Audios retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<AudioResponse>> getAllAudios(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Audio.Language language = CmsUtil.parseLanguage(lang, Audio.Language.class);
+        return ApiResponse.success(
+                audioService.getAllAudios(name, language, tags, isActive),
+                "All audios retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<AudioResponse> getAudioById(@PathVariable String id) {
         AudioResponse r = audioService.getAudioById(id);
         if (r == null)

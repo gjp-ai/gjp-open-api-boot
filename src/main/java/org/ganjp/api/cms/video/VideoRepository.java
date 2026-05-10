@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface VideoRepository extends JpaRepository<Video, String> {
 
     @Query("SELECT v FROM Video v WHERE " +
@@ -18,6 +20,17 @@ public interface VideoRepository extends JpaRepository<Video, String> {
                              @Param("tags") String tags,
                              @Param("isActive") Boolean isActive,
                              Pageable pageable);
+
+    @Query("SELECT v FROM Video v WHERE " +
+            "(:name IS NULL OR LOWER(v.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+            "(:lang IS NULL OR v.lang = :lang) AND " +
+            "(:tags IS NULL OR v.tags LIKE CONCAT('%', :tags, '%')) AND " +
+            "(:isActive IS NULL OR v.isActive = :isActive) " +
+            "ORDER BY v.displayOrder ASC")
+    List<Video> findAllVideos(@Param("name") String name,
+                             @Param("lang") Video.Language lang,
+                             @Param("tags") String tags,
+                             @Param("isActive") Boolean isActive);
 
     boolean existsByFilenameOrCoverImageFilename(String filename, String coverImageFilename);
 

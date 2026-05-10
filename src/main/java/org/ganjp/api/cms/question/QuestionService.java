@@ -23,6 +23,12 @@ public class QuestionService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
+    public List<QuestionResponse> getAllQuestions(String question, Question.Language lang, String tags, Boolean isActive) {
+        return questionRepository.findAllQuestions(question, lang, tags, isActive).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public QuestionResponse getQuestionById(String id) {
         return questionRepository.findById(id)
                 .map(this::mapToResponse)

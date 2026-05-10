@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/open/files")
@@ -43,7 +44,20 @@ public class FileController {
                 "Files retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<FileResponse>> getAllFiles(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        org.ganjp.api.cms.file.File.Language language = CmsUtil.parseLanguage(lang,
+                org.ganjp.api.cms.file.File.Language.class);
+        return ApiResponse.success(
+                fileService.getAllFiles(name, language, tags, isActive),
+                "All files retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<FileResponse> getFileById(@PathVariable String id) {
         FileResponse resp = fileService.getFileById(id);
         if (resp == null) {

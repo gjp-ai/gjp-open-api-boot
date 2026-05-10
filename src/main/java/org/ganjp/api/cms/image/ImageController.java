@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/open/images")
@@ -42,7 +43,19 @@ public class ImageController {
                 "Images retrieved");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ApiResponse<List<ImageResponse>> getAllImages(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String lang,
+            @RequestParam(required = false) String tags,
+            @RequestParam(defaultValue = "true") Boolean isActive) {
+        Image.Language language = CmsUtil.parseLanguage(lang, Image.Language.class);
+        return ApiResponse.success(
+                imageService.getAllImages(name, language, tags, isActive),
+                "All images retrieved");
+    }
+
+    @GetMapping("/{id:[a-f0-9\\-]{36}}")
     public ApiResponse<ImageResponse> getImageById(@PathVariable String id) {
         ImageResponse resp = imageService.getImageById(id);
         if (resp == null) {
