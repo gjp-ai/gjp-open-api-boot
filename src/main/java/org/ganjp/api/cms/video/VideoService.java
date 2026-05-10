@@ -35,8 +35,9 @@ public class VideoService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<VideoResponse> getAllVideos(String name, Video.Language lang, String tags, Boolean isActive) {
-        return videoRepository.findAllVideos(name, lang, tags, isActive).stream()
+    public List<VideoResponse> getAllVideos(String name, Video.Language lang, String tags,
+            Boolean isActive, String updatedAfter) {
+        return videoRepository.findAllVideos(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

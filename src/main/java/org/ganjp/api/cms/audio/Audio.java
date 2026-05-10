@@ -3,7 +3,7 @@ package org.ganjp.api.cms.audio;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cms_audio")
@@ -56,10 +56,10 @@ public class Audio {
     private Integer displayOrder = 0;
 
     @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "created_by", columnDefinition = "char(36)")
     private String createdBy;

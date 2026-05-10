@@ -43,7 +43,7 @@ class ArticleControllerTest {
                 PaginatedResponse<ArticleResponse> paginatedData = PaginatedResponse.of(
                                 List.of(articleResponse), 0, 20, 1);
 
-                when(articleService.getArticles(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(articleService.getArticles(isNull(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 

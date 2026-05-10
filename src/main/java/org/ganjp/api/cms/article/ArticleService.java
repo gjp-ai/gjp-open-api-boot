@@ -33,8 +33,8 @@ public class ArticleService {
     }
 
     public List<ArticleResponse> getAllArticles(String title, Article.Language lang, String tags,
-            Boolean isActive) {
-        return articleRepository.findAllArticles(title, lang, tags, isActive).stream()
+            Boolean isActive, String updatedAfter) {
+        return articleRepository.findAllArticles(title, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(article -> mapToListResponse(article, true))
                 .toList();
     }

@@ -49,11 +49,12 @@ public class FileController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         org.ganjp.api.cms.file.File.Language language = CmsUtil.parseLanguage(lang,
                 org.ganjp.api.cms.file.File.Language.class);
         return ApiResponse.success(
-                fileService.getAllFiles(name, language, tags, isActive),
+                fileService.getAllFiles(name, language, tags, isActive, updatedAfter),
                 "All files retrieved");
     }
 

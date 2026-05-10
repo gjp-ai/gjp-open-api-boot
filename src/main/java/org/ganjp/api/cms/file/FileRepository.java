@@ -22,15 +22,17 @@ public interface FileRepository extends JpaRepository<File, String> {
                            Pageable pageable);
 
     @Query("SELECT f FROM File f WHERE " +
-            "(:name IS NULL OR LOWER(f.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
-            "(:lang IS NULL OR f.lang = :lang) AND " +
-            "(:tags IS NULL OR f.tags LIKE CONCAT('%', :tags, '%')) AND " +
-            "(:isActive IS NULL OR f.isActive = :isActive) " +
-            "ORDER BY f.displayOrder ASC")
+        "(:name IS NULL OR LOWER(f.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+        "(:lang IS NULL OR f.lang = :lang) AND " +
+        "(:tags IS NULL OR f.tags LIKE CONCAT('%', :tags, '%')) AND " +
+        "(:isActive IS NULL OR f.isActive = :isActive) AND " +
+        "(:updatedAfter IS NULL OR f.updatedAt > :updatedAfter) " +
+        "ORDER BY f.displayOrder ASC")
     List<File> findAllFiles(@Param("name") String name,
-                           @Param("lang") File.Language lang,
-                           @Param("tags") String tags,
-                           @Param("isActive") Boolean isActive);
+                 @Param("lang") File.Language lang,
+                 @Param("tags") String tags,
+                 @Param("isActive") Boolean isActive,
+                 @Param("updatedAfter") java.time.LocalDateTime updatedAfter);
 
     boolean existsByFilename(String filename);
 }

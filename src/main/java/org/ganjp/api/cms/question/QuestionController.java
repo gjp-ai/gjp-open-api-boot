@@ -38,10 +38,11 @@ public class QuestionController {
             @RequestParam(required = false) String question,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Question.Language language = CmsUtil.parseLanguage(lang, Question.Language.class);
         return ApiResponse.success(
-                questionService.getAllQuestions(question, language, tags, isActive),
+                questionService.getAllQuestions(question, language, tags, isActive, updatedAfter),
                 "All questions retrieved");
     }
 

@@ -27,8 +27,9 @@ public class WebsiteService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<WebsiteResponse> getAllWebsites(String name, Website.Language lang, String tags, Boolean isActive) {
-        return websiteRepository.findAllWebsites(name, lang, tags, isActive).stream()
+    public List<WebsiteResponse> getAllWebsites(String name, Website.Language lang, String tags,
+            Boolean isActive, String updatedAfter) {
+        return websiteRepository.findAllWebsites(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

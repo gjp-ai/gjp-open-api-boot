@@ -2,7 +2,7 @@ package org.ganjp.api.cms.file;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cms_file")
@@ -46,10 +46,10 @@ public class File {
     private Integer displayOrder = 0;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "created_by", columnDefinition = "char(36)")
     private String createdBy;

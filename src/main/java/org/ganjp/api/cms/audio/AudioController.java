@@ -51,10 +51,11 @@ public class AudioController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Audio.Language language = CmsUtil.parseLanguage(lang, Audio.Language.class);
         return ApiResponse.success(
-                audioService.getAllAudios(name, language, tags, isActive),
+                audioService.getAllAudios(name, language, tags, isActive, updatedAfter),
                 "All audios retrieved");
     }
 

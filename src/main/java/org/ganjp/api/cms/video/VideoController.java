@@ -47,10 +47,11 @@ public class VideoController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Video.Language language = CmsUtil.parseLanguage(lang, Video.Language.class);
         return ApiResponse.success(
-                videoService.getAllVideos(name, language, tags, isActive),
+                videoService.getAllVideos(name, language, tags, isActive, updatedAfter),
                 "All videos retrieved");
     }
 

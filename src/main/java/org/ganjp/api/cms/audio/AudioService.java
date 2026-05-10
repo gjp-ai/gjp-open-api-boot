@@ -35,8 +35,9 @@ public class AudioService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<AudioResponse> getAllAudios(String name, Audio.Language lang, String tags, Boolean isActive) {
-        return audioRepository.findAllAudios(name, lang, tags, isActive).stream()
+    public List<AudioResponse> getAllAudios(String name, Audio.Language lang, String tags,
+            Boolean isActive, String updatedAfter) {
+        return audioRepository.findAllAudios(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

@@ -48,10 +48,11 @@ public class LogoController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Logo.Language language = CmsUtil.parseLanguage(lang, Logo.Language.class);
         return ApiResponse.success(
-                logoService.getAllLogos(name, language, tags, isActive),
+                logoService.getAllLogos(name, language, tags, isActive, updatedAfter),
                 "All logos retrieved");
     }
 

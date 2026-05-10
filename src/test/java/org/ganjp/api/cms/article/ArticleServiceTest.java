@@ -58,7 +58,7 @@ class ArticleServiceTest {
         when(articleProperties.getCoverImage().getBaseUrl()).thenReturn("http://cms/cover");
 
         // When
-        PaginatedResponse<ArticleResponse> response = articleService.getArticles("Test", Article.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<ArticleResponse> response = articleService.getArticles("Test", Article.Language.EN, null, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

@@ -48,10 +48,11 @@ public class ImageController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Image.Language language = CmsUtil.parseLanguage(lang, Image.Language.class);
         return ApiResponse.success(
-                imageService.getAllImages(name, language, tags, isActive),
+                imageService.getAllImages(name, language, tags, isActive, updatedAfter),
                 "All images retrieved");
     }
 

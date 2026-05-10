@@ -38,10 +38,11 @@ public class WebsiteController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Website.Language language = CmsUtil.parseLanguage(lang, Website.Language.class);
         return ApiResponse.success(
-                websiteService.getAllWebsites(name, language, tags, isActive),
+                websiteService.getAllWebsites(name, language, tags, isActive, updatedAfter),
                 "All websites retrieved");
     }
 

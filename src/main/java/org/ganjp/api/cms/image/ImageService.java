@@ -33,8 +33,9 @@ public class ImageService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<ImageResponse> getAllImages(String name, Image.Language lang, String tags, Boolean isActive) {
-        return imageRepository.findAllImages(name, lang, tags, isActive).stream()
+    public List<ImageResponse> getAllImages(String name, Image.Language lang, String tags,
+            Boolean isActive, String updatedAfter) {
+        return imageRepository.findAllImages(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

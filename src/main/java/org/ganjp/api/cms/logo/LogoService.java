@@ -33,8 +33,9 @@ public class LogoService {
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<LogoResponse> getAllLogos(String name, Logo.Language lang, String tags, Boolean isActive) {
-        return logoRepository.findAllLogos(name, lang, tags, isActive).stream()
+    public List<LogoResponse> getAllLogos(String name, Logo.Language lang, String tags,
+            Boolean isActive, String updatedAfter) {
+        return logoRepository.findAllLogos(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

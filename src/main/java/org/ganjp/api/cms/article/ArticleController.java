@@ -53,10 +53,11 @@ public class ArticleController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String updatedAfter,
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Article.Language language = CmsUtil.parseLanguage(lang, Article.Language.class);
         return ApiResponse.success(
-                articleService.getAllArticles(title, language, tags, isActive),
+                articleService.getAllArticles(title, language, tags, isActive, updatedAfter),
                 "All articles retrieved");
     }
 
