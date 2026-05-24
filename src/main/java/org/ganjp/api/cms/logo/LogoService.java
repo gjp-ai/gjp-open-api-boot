@@ -26,16 +26,16 @@ public class LogoService {
     @Value("${logo.base-url:}")
     private String logoBaseUrl;
 
-    public PaginatedResponse<LogoResponse> getLogos(String name, Logo.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<LogoResponse> getLogos(String channel, String name, Logo.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Logo> pageResult = logoRepository.searchLogos(name, lang, tags, isActive, pageable);
+        Page<Logo> pageResult = logoRepository.searchLogos(channel, name, lang, tags, isActive, pageable);
         List<LogoResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<LogoResponse> getAllLogos(String name, Logo.Language lang, String tags,
+    public List<LogoResponse> getAllLogos(String channel, String name, Logo.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return logoRepository.findAllLogos(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return logoRepository.findAllLogos(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

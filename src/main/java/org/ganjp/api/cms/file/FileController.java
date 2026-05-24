@@ -26,6 +26,7 @@ public class FileController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<FileResponse>> getFiles(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -40,12 +41,13 @@ public class FileController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                fileService.getFiles(name, language, tags, isActive, page, size, sort, direction),
+                fileService.getFiles(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Files retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<FileResponse>> getAllFiles(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -54,7 +56,7 @@ public class FileController {
         org.ganjp.api.cms.file.File.Language language = CmsUtil.parseLanguage(lang,
                 org.ganjp.api.cms.file.File.Language.class);
         return ApiResponse.success(
-                fileService.getAllFiles(name, language, tags, isActive, updatedAfter),
+                fileService.getAllFiles(channel, name, language, tags, isActive, updatedAfter),
                 "All files retrieved");
     }
 

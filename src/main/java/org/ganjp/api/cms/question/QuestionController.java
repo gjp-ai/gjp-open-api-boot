@@ -16,6 +16,7 @@ public class QuestionController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<QuestionResponse>> getQuestions(
+            @RequestParam String channel,
             @RequestParam(required = false) String question,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -29,12 +30,13 @@ public class QuestionController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                questionService.getQuestions(question, language, tags, isActive, page, size, sort, direction),
+                questionService.getQuestions(channel, question, language, tags, isActive, page, size, sort, direction),
                 "Questions retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<QuestionResponse>> getAllQuestions(
+            @RequestParam String channel,
             @RequestParam(required = false) String question,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -42,7 +44,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Question.Language language = CmsUtil.parseLanguage(lang, Question.Language.class);
         return ApiResponse.success(
-                questionService.getAllQuestions(question, language, tags, isActive, updatedAfter),
+                questionService.getAllQuestions(channel, question, language, tags, isActive, updatedAfter),
                 "All questions retrieved");
     }
 

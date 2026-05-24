@@ -51,11 +51,11 @@ class LogoServiceTest {
 
         Page<Logo> mockPage = new PageImpl<>(List.of(logo));
 
-        when(logoRepository.searchLogos(eq("Test"), eq(Logo.Language.EN), any(), any(), any(Pageable.class)))
+        when(logoRepository.searchLogos(eq("default"), eq("Test"), eq(Logo.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<LogoResponse> response = logoService.getLogos("Test", Logo.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<LogoResponse> response = logoService.getLogos("default", "Test", Logo.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

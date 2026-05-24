@@ -52,13 +52,13 @@ class ArticleServiceTest {
         Page<Article> mockPage = new PageImpl<>(List.of(article));
         
 
-        when(articleRepository.searchArticles(eq("Test"), eq(Article.Language.EN), any(), any(), any(Pageable.class)))
+        when(articleRepository.searchArticles(eq("default"), eq("Test"), eq(Article.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         when(articleProperties.getCoverImage().getBaseUrl()).thenReturn("http://cms/cover");
 
         // When
-        PaginatedResponse<ArticleResponse> response = articleService.getArticles("Test", Article.Language.EN, null, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<ArticleResponse> response = articleService.getArticles("default", "Test", Article.Language.EN, null, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

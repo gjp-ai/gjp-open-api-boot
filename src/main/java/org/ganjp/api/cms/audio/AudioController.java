@@ -29,6 +29,7 @@ public class AudioController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<AudioResponse>> getAudios(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -42,12 +43,13 @@ public class AudioController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                audioService.getAudios(name, language, tags, isActive, page, size, sort, direction),
+                audioService.getAudios(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Audios retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<AudioResponse>> getAllAudios(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -55,7 +57,7 @@ public class AudioController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Audio.Language language = CmsUtil.parseLanguage(lang, Audio.Language.class);
         return ApiResponse.success(
-                audioService.getAllAudios(name, language, tags, isActive, updatedAfter),
+                audioService.getAllAudios(channel, name, language, tags, isActive, updatedAfter),
                 "All audios retrieved");
     }
 

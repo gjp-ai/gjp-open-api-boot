@@ -16,16 +16,16 @@ import java.util.List;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
-    public PaginatedResponse<QuestionResponse> getQuestions(String question, Question.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<QuestionResponse> getQuestions(String channel, String question, Question.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Question> pageResult = questionRepository.search(question, lang, tags, isActive, pageable);
+        Page<Question> pageResult = questionRepository.search(channel, question, lang, tags, isActive, pageable);
         List<QuestionResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<QuestionResponse> getAllQuestions(String question, Question.Language lang, String tags,
+    public List<QuestionResponse> getAllQuestions(String channel, String question, Question.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return questionRepository.findAllQuestions(question, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return questionRepository.findAllQuestions(channel, question, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

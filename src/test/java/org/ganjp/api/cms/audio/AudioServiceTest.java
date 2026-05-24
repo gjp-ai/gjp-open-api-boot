@@ -53,11 +53,11 @@ class AudioServiceTest {
 
         Page<Audio> mockPage = new PageImpl<>(List.of(audio));
 
-        when(audioRepository.searchAudios(eq("Podcast"), eq(Audio.Language.EN), any(), any(), any(Pageable.class)))
+        when(audioRepository.searchAudios(eq("default"), eq("Podcast"), eq(Audio.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<AudioResponse> response = audioService.getAudios("Podcast", Audio.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<AudioResponse> response = audioService.getAudios("default", "Podcast", Audio.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

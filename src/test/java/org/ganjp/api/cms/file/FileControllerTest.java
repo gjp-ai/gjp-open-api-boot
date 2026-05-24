@@ -38,12 +38,12 @@ class FileControllerTest {
                 PaginatedResponse<FileResponse> paginatedData = PaginatedResponse.of(
                                 List.of(fileResponse), 0, 20, 1);
 
-                when(fileService.getFiles(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(fileService.getFiles(anyString(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 
                 // When & Then
-                mockMvc.perform(get("/open/files"))
+                mockMvc.perform(get("/open/files").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -53,7 +53,7 @@ class FileControllerTest {
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
                 // When & Then
-                mockMvc.perform(get("/open/files?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/files?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(400))
                                 .andExpect(jsonPath("$.status.message").value("Invalid lang"));

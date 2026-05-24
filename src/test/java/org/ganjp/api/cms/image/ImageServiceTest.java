@@ -52,11 +52,11 @@ class ImageServiceTest {
 
         Page<Image> mockPage = new PageImpl<>(List.of(image));
 
-        when(imageRepository.searchImages(eq("Test"), eq(Image.Language.EN), any(), any(), any(Pageable.class)))
+        when(imageRepository.searchImages(eq("default"), eq("Test"), eq(Image.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<ImageResponse> response = imageService.getImages("Test", Image.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<ImageResponse> response = imageService.getImages("default", "Test", Image.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

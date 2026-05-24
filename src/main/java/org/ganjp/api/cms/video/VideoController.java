@@ -25,6 +25,7 @@ public class VideoController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<VideoResponse>> getVideos(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -38,12 +39,13 @@ public class VideoController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                videoService.getVideos(name, language, tags, isActive, page, size, sort, direction),
+                videoService.getVideos(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Videos retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<VideoResponse>> getAllVideos(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -51,7 +53,7 @@ public class VideoController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Video.Language language = CmsUtil.parseLanguage(lang, Video.Language.class);
         return ApiResponse.success(
-                videoService.getAllVideos(name, language, tags, isActive, updatedAfter),
+                videoService.getAllVideos(channel, name, language, tags, isActive, updatedAfter),
                 "All videos retrieved");
     }
 

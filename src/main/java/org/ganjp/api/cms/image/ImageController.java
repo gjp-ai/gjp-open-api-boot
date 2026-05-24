@@ -26,6 +26,7 @@ public class ImageController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<ImageResponse>> getImages(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -39,12 +40,13 @@ public class ImageController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                imageService.getImages(name, language, tags, isActive, page, size, sort, direction),
+                imageService.getImages(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Images retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<ImageResponse>> getAllImages(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -52,7 +54,7 @@ public class ImageController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Image.Language language = CmsUtil.parseLanguage(lang, Image.Language.class);
         return ApiResponse.success(
-                imageService.getAllImages(name, language, tags, isActive, updatedAfter),
+                imageService.getAllImages(channel, name, language, tags, isActive, updatedAfter),
                 "All images retrieved");
     }
 

@@ -31,10 +31,10 @@ class AppSettingControllerTest {
         AppSettingDto dto = new AppSettingDto();
         dto.setName("test");
         dto.setValue("val");
-        when(appSettingService.getAllAppSettings()).thenReturn(List.of(dto));
+        when(appSettingService.getAllAppSettings("default")).thenReturn(List.of(dto));
 
         // When & Then
-        mockMvc.perform(get("/open/app-settings"))
+        mockMvc.perform(get("/open/app-settings").param("channel", "default"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].name").value("test"))
                 .andExpect(jsonPath("$.status.message").value("Public app settings retrieved successfully"));

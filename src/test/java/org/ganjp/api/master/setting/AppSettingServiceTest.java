@@ -30,10 +30,10 @@ class AppSettingServiceTest {
                 .lang(AppSetting.Language.EN)
                 .isPublic(true)
                 .build();
-        when(appSettingRepository.findByIsPublicTrueOrderByNameAscLangAsc()).thenReturn(List.of(setting));
+        when(appSettingRepository.findByIsPublicTrueAndChannelOrderByNameAscLangAsc("default")).thenReturn(List.of(setting));
 
         // When
-        List<AppSettingDto> result = appSettingService.getAllAppSettings();
+        List<AppSettingDto> result = appSettingService.getAllAppSettings("default");
 
         // Then
         assertThat(result).hasSize(1);

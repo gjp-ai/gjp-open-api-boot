@@ -26,6 +26,7 @@ public class LogoController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<LogoResponse>> getLogos(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -39,12 +40,13 @@ public class LogoController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                logoService.getLogos(name, language, tags, isActive, page, size, sort, direction),
+                logoService.getLogos(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Logos retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<LogoResponse>> getAllLogos(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -52,7 +54,7 @@ public class LogoController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Logo.Language language = CmsUtil.parseLanguage(lang, Logo.Language.class);
         return ApiResponse.success(
-                logoService.getAllLogos(name, language, tags, isActive, updatedAfter),
+                logoService.getAllLogos(channel, name, language, tags, isActive, updatedAfter),
                 "All logos retrieved");
     }
 

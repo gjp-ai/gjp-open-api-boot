@@ -44,11 +44,11 @@ class VideoControllerTest {
                 PaginatedResponse<VideoResponse> paginatedData = PaginatedResponse.of(
                                 List.of(videoResponse), 0, 20, 1);
 
-                when(videoService.getVideos(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(videoService.getVideos(anyString(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 
-                mockMvc.perform(get("/open/videos"))
+                mockMvc.perform(get("/open/videos").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -57,7 +57,7 @@ class VideoControllerTest {
 
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
-                mockMvc.perform(get("/open/videos?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/videos?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(400))
                                 .andExpect(jsonPath("$.status.message").value("Invalid lang"));

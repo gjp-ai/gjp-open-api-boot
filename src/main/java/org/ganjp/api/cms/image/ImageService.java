@@ -26,16 +26,16 @@ public class ImageService {
     @Value("${image.base-url:}")
     private String imageBaseUrl;
 
-    public PaginatedResponse<ImageResponse> getImages(String name, Image.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<ImageResponse> getImages(String channel, String name, Image.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Image> pageResult = imageRepository.searchImages(name, lang, tags, isActive, pageable);
+        Page<Image> pageResult = imageRepository.searchImages(channel, name, lang, tags, isActive, pageable);
         List<ImageResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<ImageResponse> getAllImages(String name, Image.Language lang, String tags,
+    public List<ImageResponse> getAllImages(String channel, String name, Image.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return imageRepository.findAllImages(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return imageRepository.findAllImages(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

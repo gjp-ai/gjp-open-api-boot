@@ -13,11 +13,13 @@ import java.util.List;
 public interface WebsiteRepository extends JpaRepository<Website, String> {
 
     @Query("SELECT w FROM Website w WHERE " +
+           "w.channel = :channel AND " +
            "(:name IS NULL OR LOWER(w.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:lang IS NULL OR w.lang = :lang) AND " +
            "(:tags IS NULL OR w.tags LIKE CONCAT('%', :tags, '%')) AND " +
            "(:isActive IS NULL OR w.isActive = :isActive)")
     Page<Website> searchWebsites(
+        @Param("channel") String channel,
         @Param("name") String name,
         @Param("lang") Website.Language lang,
         @Param("tags") String tags,
@@ -26,6 +28,7 @@ public interface WebsiteRepository extends JpaRepository<Website, String> {
     );
 
     @Query("SELECT w FROM Website w WHERE " +
+           "w.channel = :channel AND " +
            "(:name IS NULL OR LOWER(w.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:lang IS NULL OR w.lang = :lang) AND " +
            "(:tags IS NULL OR w.tags LIKE CONCAT('%', :tags, '%')) AND " +
@@ -33,6 +36,7 @@ public interface WebsiteRepository extends JpaRepository<Website, String> {
            "(:updatedAfter IS NULL OR w.updatedAt > :updatedAfter) " +
            "ORDER BY w.displayOrder ASC")
     List<Website> findAllWebsites(
+        @Param("channel") String channel,
         @Param("name") String name,
         @Param("lang") Website.Language lang,
         @Param("tags") String tags,

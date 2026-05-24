@@ -47,11 +47,11 @@ class WebsiteServiceTest {
 
         Page<Website> mockPage = new PageImpl<>(List.of(website));
 
-        when(websiteRepository.searchWebsites(eq("Google"), eq(Website.Language.EN), any(), any(), any(Pageable.class)))
+        when(websiteRepository.searchWebsites(eq("default"), eq("Google"), eq(Website.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<WebsiteResponse> response = websiteService.getWebsites("Google", Website.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<WebsiteResponse> response = websiteService.getWebsites("default", "Google", Website.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

@@ -11,24 +11,28 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<File, String> {
 
     @Query("SELECT f FROM File f WHERE " +
+            "f.channel = :channel AND " +
             "(:name IS NULL OR LOWER(f.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
             "(:lang IS NULL OR f.lang = :lang) AND " +
             "(:tags IS NULL OR f.tags LIKE CONCAT('%', :tags, '%')) AND " +
             "(:isActive IS NULL OR f.isActive = :isActive)")
-    Page<File> searchFiles(@Param("name") String name,
+    Page<File> searchFiles(@Param("channel") String channel,
+                           @Param("name") String name,
                            @Param("lang") File.Language lang,
                            @Param("tags") String tags,
                            @Param("isActive") Boolean isActive,
                            Pageable pageable);
 
     @Query("SELECT f FROM File f WHERE " +
+        "f.channel = :channel AND " +
         "(:name IS NULL OR LOWER(f.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
         "(:lang IS NULL OR f.lang = :lang) AND " +
         "(:tags IS NULL OR f.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR f.isActive = :isActive) AND " +
         "(:updatedAfter IS NULL OR f.updatedAt > :updatedAfter) " +
         "ORDER BY f.displayOrder ASC")
-    List<File> findAllFiles(@Param("name") String name,
+    List<File> findAllFiles(@Param("channel") String channel,
+                 @Param("name") String name,
                  @Param("lang") File.Language lang,
                  @Param("tags") String tags,
                  @Param("isActive") Boolean isActive,

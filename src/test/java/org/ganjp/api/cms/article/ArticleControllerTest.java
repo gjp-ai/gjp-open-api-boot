@@ -43,12 +43,12 @@ class ArticleControllerTest {
                 PaginatedResponse<ArticleResponse> paginatedData = PaginatedResponse.of(
                                 List.of(articleResponse), 0, 20, 1);
 
-                when(articleService.getArticles(isNull(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(articleService.getArticles(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 
                 // When & Then
-                mockMvc.perform(get("/open/articles"))
+                mockMvc.perform(get("/open/articles").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -58,7 +58,7 @@ class ArticleControllerTest {
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
                 // When & Then
-                mockMvc.perform(get("/open/articles?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/articles?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk()) // Assuming ApiResponse structure returns 200 via
                                                             // Controller, but internal code is 400
                                 .andExpect(jsonPath("$.status.code").value(400))

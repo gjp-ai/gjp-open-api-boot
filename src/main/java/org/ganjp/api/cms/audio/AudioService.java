@@ -28,16 +28,16 @@ public class AudioService {
     @Value("${audio.cover-image.base-url:}")
     private String audioCoverImageBaseUrl;
 
-    public PaginatedResponse<AudioResponse> getAudios(String name, Audio.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<AudioResponse> getAudios(String channel, String name, Audio.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Audio> pageResult = audioRepository.searchAudios(name, lang, tags, isActive, pageable);
+        Page<Audio> pageResult = audioRepository.searchAudios(channel, name, lang, tags, isActive, pageable);
         List<AudioResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<AudioResponse> getAllAudios(String name, Audio.Language lang, String tags,
+    public List<AudioResponse> getAllAudios(String channel, String name, Audio.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return audioRepository.findAllAudios(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return audioRepository.findAllAudios(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

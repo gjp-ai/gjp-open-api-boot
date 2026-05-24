@@ -37,12 +37,12 @@ class QuestionControllerTest {
                 PaginatedResponse<QuestionResponse> paginatedData = PaginatedResponse.of(
                                 List.of(questionResponse), 0, 20, 1);
 
-                when(questionService.getQuestions(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(),
+                when(questionService.getQuestions(anyString(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(),
                                 anyString(), anyString()))
                                 .thenReturn(paginatedData);
 
                 // When & Then
-                mockMvc.perform(get("/open/questions"))
+                mockMvc.perform(get("/open/questions").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -52,7 +52,7 @@ class QuestionControllerTest {
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
                 // When & Then
-                mockMvc.perform(get("/open/questions?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/questions?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(400))
                                 .andExpect(jsonPath("$.status.message").value("Invalid lang"));

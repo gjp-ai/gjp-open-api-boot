@@ -19,10 +19,10 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleProperties articleProperties;
 
-    public PaginatedResponse<ArticleResponse> getArticles(String title, Article.Language language, String tags,
+    public PaginatedResponse<ArticleResponse> getArticles(String channel, String title, Article.Language language, String tags,
             Boolean isIncludeContent, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Article> pageResult = articleRepository.searchArticles(title, language, tags, isActive, pageable);
+        Page<Article> pageResult = articleRepository.searchArticles(channel, title, language, tags, isActive, pageable);
 
         List<ArticleResponse> list = pageResult.getContent().stream()
                 .map(article -> mapToListResponse(article, isIncludeContent))
@@ -32,9 +32,9 @@ public class ArticleService {
                 pageResult.getTotalElements());
     }
 
-    public List<ArticleResponse> getAllArticles(String title, Article.Language lang, String tags,
+    public List<ArticleResponse> getAllArticles(String channel, String title, Article.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return articleRepository.findAllArticles(title, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return articleRepository.findAllArticles(channel, title, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(article -> mapToListResponse(article, true))
                 .toList();
     }

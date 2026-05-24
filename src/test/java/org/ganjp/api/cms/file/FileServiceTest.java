@@ -50,11 +50,11 @@ class FileServiceTest {
 
         Page<org.ganjp.api.cms.file.File> mockPage = new PageImpl<>(List.of(fileEntity));
 
-        when(fileRepository.searchFiles(eq("Doc"), eq(org.ganjp.api.cms.file.File.Language.EN), any(), any(), any(Pageable.class)))
+        when(fileRepository.searchFiles(eq("default"), eq("Doc"), eq(org.ganjp.api.cms.file.File.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<FileResponse> response = fileService.getFiles("Doc", org.ganjp.api.cms.file.File.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<FileResponse> response = fileService.getFiles("default", "Doc", org.ganjp.api.cms.file.File.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

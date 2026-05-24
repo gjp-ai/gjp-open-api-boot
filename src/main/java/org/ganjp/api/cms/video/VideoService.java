@@ -28,16 +28,16 @@ public class VideoService {
     @Value("${video.cover-image.base-url:}")
     private String videoCoverImageBaseUrl;
 
-    public PaginatedResponse<VideoResponse> getVideos(String name, Video.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<VideoResponse> getVideos(String channel, String name, Video.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Video> pageResult = videoRepository.searchVideos(name, lang, tags, isActive, pageable);
+        Page<Video> pageResult = videoRepository.searchVideos(channel, name, lang, tags, isActive, pageable);
         List<VideoResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<VideoResponse> getAllVideos(String name, Video.Language lang, String tags,
+    public List<VideoResponse> getAllVideos(String channel, String name, Video.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return videoRepository.findAllVideos(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return videoRepository.findAllVideos(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

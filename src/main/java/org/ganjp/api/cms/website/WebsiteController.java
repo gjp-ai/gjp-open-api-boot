@@ -16,6 +16,7 @@ public class WebsiteController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<WebsiteResponse>> getWebsites(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -29,12 +30,13 @@ public class WebsiteController {
             return ApiResponse.error(400, "Invalid lang", null);
         }
         return ApiResponse.success(
-                websiteService.getWebsites(name, language, tags, isActive, page, size, sort, direction),
+                websiteService.getWebsites(channel, name, language, tags, isActive, page, size, sort, direction),
                 "Websites retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<WebsiteResponse>> getAllWebsites(
+            @RequestParam String channel,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -42,7 +44,7 @@ public class WebsiteController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Website.Language language = CmsUtil.parseLanguage(lang, Website.Language.class);
         return ApiResponse.success(
-                websiteService.getAllWebsites(name, language, tags, isActive, updatedAfter),
+                websiteService.getAllWebsites(channel, name, language, tags, isActive, updatedAfter),
                 "All websites retrieved");
     }
 

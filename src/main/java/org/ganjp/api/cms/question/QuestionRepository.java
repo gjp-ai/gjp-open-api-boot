@@ -13,11 +13,13 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, String> {
 
     @Query("SELECT q FROM Question q WHERE " +
+           "q.channel = :channel AND " +
            "(:question IS NULL OR LOWER(q.question) LIKE LOWER(CONCAT('%', :question, '%'))) AND " +
            "(:lang IS NULL OR q.lang = :lang) AND " +
            "(:tags IS NULL OR LOWER(q.tags) LIKE LOWER(CONCAT('%', :tags, '%'))) AND " +
            "(:isActive IS NULL OR q.isActive = :isActive)")
     Page<Question> search(
+            @Param("channel") String channel,
             @Param("question") String question,
             @Param("lang") Question.Language lang,
             @Param("tags") String tags,
@@ -26,13 +28,15 @@ public interface QuestionRepository extends JpaRepository<Question, String> {
     );
 
     @Query("SELECT q FROM Question q WHERE " +
+        "q.channel = :channel AND " +
         "(:question IS NULL OR LOWER(q.question) LIKE LOWER(CONCAT('%', :question, '%'))) AND " +
         "(:lang IS NULL OR q.lang = :lang) AND " +
         "(:tags IS NULL OR q.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR q.isActive = :isActive) AND " +
         "(:updatedAfter IS NULL OR q.updatedAt > :updatedAfter) " +
         "ORDER BY q.displayOrder ASC")
-    List<Question> findAllQuestions(@Param("question") String question,
+    List<Question> findAllQuestions(@Param("channel") String channel,
+                 @Param("question") String question,
                  @Param("lang") Question.Language lang,
                  @Param("tags") String tags,
                  @Param("isActive") Boolean isActive,

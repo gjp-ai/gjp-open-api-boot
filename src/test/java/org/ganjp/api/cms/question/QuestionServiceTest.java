@@ -39,11 +39,11 @@ class QuestionServiceTest {
 
         Page<Question> mockPage = new PageImpl<>(List.of(question));
 
-        when(questionRepository.search(eq("Spring"), eq(Question.Language.EN), any(), any(), any(Pageable.class)))
+        when(questionRepository.search(eq("default"), eq("Spring"), eq(Question.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
         // When
-        PaginatedResponse<QuestionResponse> response = questionService.getQuestions("Spring", Question.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<QuestionResponse> response = questionService.getQuestions("default", "Spring", Question.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         // Then
         assertThat(response).isNotNull();

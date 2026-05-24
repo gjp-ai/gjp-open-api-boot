@@ -14,8 +14,8 @@ import java.util.List;
 public class AppSettingService {
     private final AppSettingRepository appSettingRepository;
 
-    public List<AppSettingDto> getAllAppSettings() {
-        List<AppSetting> settings = appSettingRepository.findByIsPublicTrueOrderByNameAscLangAsc();
+    public List<AppSettingDto> getAllAppSettings(String channel) {
+        List<AppSetting> settings = appSettingRepository.findByIsPublicTrueAndChannelOrderByNameAscLangAsc(channel);
         return settings.stream().map(AppSettingDto::fromEntity).toList();
     }
 }

@@ -25,16 +25,16 @@ public class FileService {
     @Value("${file.base-url:}")
     private String fileBaseUrl;
 
-    public PaginatedResponse<FileResponse> getFiles(String name, org.ganjp.api.cms.file.File.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<FileResponse> getFiles(String channel, String name, org.ganjp.api.cms.file.File.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<org.ganjp.api.cms.file.File> pageResult = fileRepository.searchFiles(name, lang, tags, isActive, pageable);
+        Page<org.ganjp.api.cms.file.File> pageResult = fileRepository.searchFiles(channel, name, lang, tags, isActive, pageable);
         List<FileResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<FileResponse> getAllFiles(String name, org.ganjp.api.cms.file.File.Language lang, String tags,
+    public List<FileResponse> getAllFiles(String channel, String name, org.ganjp.api.cms.file.File.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return fileRepository.findAllFiles(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return fileRepository.findAllFiles(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

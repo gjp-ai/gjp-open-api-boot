@@ -14,24 +14,28 @@ import java.util.Optional;
 public interface LogoRepository extends JpaRepository<Logo, String> {
 
     @Query("SELECT l FROM Logo l WHERE " +
+        "l.channel = :channel AND " +
         "(:name IS NULL OR LOWER(l.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
         "(:lang IS NULL OR l.lang = :lang) AND " +
         "(:tags IS NULL OR l.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR l.isActive = :isActive)")
-    Page<Logo> searchLogos(@Param("name") String name,
+    Page<Logo> searchLogos(@Param("channel") String channel,
+               @Param("name") String name,
                @Param("lang") Logo.Language lang,
                @Param("tags") String tags,
                @Param("isActive") Boolean isActive,
                Pageable pageable);
 
     @Query("SELECT l FROM Logo l WHERE " +
+        "l.channel = :channel AND " +
         "(:name IS NULL OR LOWER(l.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
         "(:lang IS NULL OR l.lang = :lang) AND " +
         "(:tags IS NULL OR l.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR l.isActive = :isActive) AND " +
         "(:updatedAfter IS NULL OR l.updatedAt > :updatedAfter) " +
         "ORDER BY l.displayOrder ASC")
-    List<Logo> findAllLogos(@Param("name") String name,
+    List<Logo> findAllLogos(@Param("channel") String channel,
+               @Param("name") String name,
                @Param("lang") Logo.Language lang,
                @Param("tags") String tags,
                @Param("isActive") Boolean isActive,

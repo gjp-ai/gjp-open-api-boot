@@ -38,12 +38,12 @@ class AudioControllerTest {
                 PaginatedResponse<AudioResponse> paginatedData = PaginatedResponse.of(
                                 List.of(audioResponse), 0, 20, 1);
 
-                when(audioService.getAudios(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(audioService.getAudios(anyString(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 
                 // When & Then
-                mockMvc.perform(get("/open/audios"))
+                mockMvc.perform(get("/open/audios").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -53,7 +53,7 @@ class AudioControllerTest {
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
                 // When & Then
-                mockMvc.perform(get("/open/audios?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/audios?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(400))
                                 .andExpect(jsonPath("$.status.message").value("Invalid lang"));

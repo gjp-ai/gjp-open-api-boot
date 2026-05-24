@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface AppSettingRepository extends JpaRepository<AppSetting, String> {
 
-    List<AppSetting> findByIsPublicTrueOrderByNameAscLangAsc();
+    List<AppSetting> findByIsPublicTrueAndChannelOrderByNameAscLangAsc(String channel);
 }

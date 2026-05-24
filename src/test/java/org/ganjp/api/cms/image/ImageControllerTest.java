@@ -41,12 +41,12 @@ class ImageControllerTest {
                 PaginatedResponse<ImageResponse> paginatedData = PaginatedResponse.of(
                                 List.of(imageResponse), 0, 20, 1);
 
-                when(imageService.getImages(isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
+                when(imageService.getImages(anyString(), isNull(), isNull(), isNull(), isNull(), anyInt(), anyInt(), anyString(),
                                 anyString()))
                                 .thenReturn(paginatedData);
 
                 // When & Then
-                mockMvc.perform(get("/open/images"))
+                mockMvc.perform(get("/open/images").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(200))
                                 .andExpect(jsonPath("$.data.content[0].id").value("abc-123"))
@@ -56,7 +56,7 @@ class ImageControllerTest {
         @Test
         void should_returnBadRequest_when_invalidLanguage() throws Exception {
                 // When & Then
-                mockMvc.perform(get("/open/images?lang=INVALID_LANG"))
+                mockMvc.perform(get("/open/images?lang=INVALID_LANG").param("channel", "default"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.status.code").value(400))
                                 .andExpect(jsonPath("$.status.message").value("Invalid lang"));

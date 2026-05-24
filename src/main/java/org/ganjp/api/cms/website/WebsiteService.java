@@ -20,16 +20,16 @@ public class WebsiteService {
     @Value("${logo.base-url:}")
     private String logoBaseUrl;
 
-    public PaginatedResponse<WebsiteResponse> getWebsites(String name, Website.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
+    public PaginatedResponse<WebsiteResponse> getWebsites(String channel, String name, Website.Language lang, String tags, Boolean isActive, int page, int size, String sort, String direction) {
         Pageable pageable = CmsUtil.buildPageable(page, size, sort, direction);
-        Page<Website> pageResult = websiteRepository.searchWebsites(name, lang, tags, isActive, pageable);
+        Page<Website> pageResult = websiteRepository.searchWebsites(channel, name, lang, tags, isActive, pageable);
         List<WebsiteResponse> list = pageResult.getContent().stream().map(this::mapToResponse).toList();
         return PaginatedResponse.of(list, pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements());
     }
 
-    public List<WebsiteResponse> getAllWebsites(String name, Website.Language lang, String tags,
+    public List<WebsiteResponse> getAllWebsites(String channel, String name, Website.Language lang, String tags,
             Boolean isActive, String updatedAfter) {
-        return websiteRepository.findAllWebsites(name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
+        return websiteRepository.findAllWebsites(channel, name, lang, tags, isActive, CmsUtil.parseLocalDateTime(updatedAfter)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }

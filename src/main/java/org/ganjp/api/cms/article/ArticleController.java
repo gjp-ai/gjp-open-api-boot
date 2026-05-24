@@ -30,6 +30,7 @@ public class ArticleController {
 
     @GetMapping
     public ApiResponse<PaginatedResponse<ArticleResponse>> getArticles(
+            @RequestParam String channel,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -43,13 +44,14 @@ public class ArticleController {
         if (lang != null && !lang.isBlank() && language == null)
             return ApiResponse.error(400, "Invalid lang", null);
         return ApiResponse.success(
-                articleService.getArticles(title, language, tags, isIncludeContent, isActive, page, size, sort,
+                articleService.getArticles(channel, title, language, tags, isIncludeContent, isActive, page, size, sort,
                         direction),
                 "Articles retrieved");
     }
 
     @GetMapping("/all")
     public ApiResponse<List<ArticleResponse>> getAllArticles(
+            @RequestParam String channel,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String lang,
             @RequestParam(required = false) String tags,
@@ -57,7 +59,7 @@ public class ArticleController {
             @RequestParam(defaultValue = "true") Boolean isActive) {
         Article.Language language = CmsUtil.parseLanguage(lang, Article.Language.class);
         return ApiResponse.success(
-                articleService.getAllArticles(title, language, tags, isActive, updatedAfter),
+                articleService.getAllArticles(channel, title, language, tags, isActive, updatedAfter),
                 "All articles retrieved");
     }
 

@@ -52,10 +52,10 @@ class VideoServiceTest {
 
         Page<Video> mockPage = new PageImpl<>(List.of(video));
 
-        when(videoRepository.searchVideos(eq("Test"), eq(Video.Language.EN), any(), any(), any(Pageable.class)))
+        when(videoRepository.searchVideos(eq("default"), eq("Test"), eq(Video.Language.EN), any(), any(), any(Pageable.class)))
                 .thenReturn(mockPage);
 
-        PaginatedResponse<VideoResponse> response = videoService.getVideos("Test", Video.Language.EN, null, null, 0, 10, "displayOrder", "asc");
+        PaginatedResponse<VideoResponse> response = videoService.getVideos("default", "Test", Video.Language.EN, null, null, 0, 10, "displayOrder", "asc");
 
         assertThat(response).isNotNull();
         assertThat(response.getContent()).hasSize(1);

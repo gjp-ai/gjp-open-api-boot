@@ -12,24 +12,28 @@ import java.util.Optional;
 public interface ImageRepository extends JpaRepository<Image, String> {
 
     @Query("SELECT i FROM Image i WHERE " +
+        "i.channel = :channel AND " +
         "(:name IS NULL OR LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
         "(:lang IS NULL OR i.lang = :lang) AND " +
         "(:tags IS NULL OR i.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR i.isActive = :isActive)")
-    Page<Image> searchImages(@Param("name") String name,
+    Page<Image> searchImages(@Param("channel") String channel,
+                             @Param("name") String name,
                              @Param("lang") Image.Language lang,
                              @Param("tags") String tags,
                              @Param("isActive") Boolean isActive,
                              Pageable pageable);
 
     @Query("SELECT i FROM Image i WHERE " +
+        "i.channel = :channel AND " +
         "(:name IS NULL OR LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
         "(:lang IS NULL OR i.lang = :lang) AND " +
         "(:tags IS NULL OR i.tags LIKE CONCAT('%', :tags, '%')) AND " +
         "(:isActive IS NULL OR i.isActive = :isActive) AND " +
         "(:updatedAfter IS NULL OR i.updatedAt > :updatedAfter) " +
         "ORDER BY i.displayOrder ASC")
-    List<Image> findAllImages(@Param("name") String name,
+    List<Image> findAllImages(@Param("channel") String channel,
+                             @Param("name") String name,
                              @Param("lang") Image.Language lang,
                              @Param("tags") String tags,
                              @Param("isActive") Boolean isActive,
