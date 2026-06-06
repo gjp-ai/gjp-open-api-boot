@@ -29,6 +29,11 @@ cms:
   upload:
     root-directory: ${CMS_UPLOAD_ROOT_DIRECTORY:/var/www/gjp/upload}
 
+edu:
+  base-url: ${EDU_BASE_URL:${cms.base-url}}
+  upload:
+    root-directory: ${EDU_UPLOAD_ROOT_DIRECTORY:${cms.upload.root-directory}}
+
 logging:
   level:
     org.ganjp.api: WARN

@@ -27,6 +27,30 @@ cms:
   upload:
     root-directory: ${CMS_UPLOAD_DIR}
 
+edu:
+  base-url: ${EDU_BASE_URL:${cms.base-url}}
+  upload:
+    root-directory: ${EDU_UPLOAD_DIR:${cms.upload.root-directory}}
+  vocabulary:
+    audio:
+      base-url: ${edu.base-url}/open/edu-vocabularies/audios/
+    upload:
+      audio-directory: ${edu.upload.root-directory}/edu/vocabularies/audios
+  phrase:
+    audio:
+      base-url: ${edu.base-url}/open/edu-phrases/audios/
+    upload:
+      audio-directory: ${edu.upload.root-directory}/edu/phrases/audios
+  sentence:
+    audio:
+      base-url: ${edu.base-url}/open/edu-sentences/audios/
+    upload:
+      audio-directory: ${edu.upload.root-directory}/edu/sentences/audios
+  question-image:
+    base-url: ${edu.base-url}/open/edu-question-images/view/
+    upload:
+      directory: ${edu.upload.root-directory}/edu/question-images
+
 article:
   cover-image:
     base-url: ${cms.base-url}/open/articles/cover-images/
@@ -78,5 +102,4 @@ logo:
     max-file-size: 5242880
     resize:
       target-size: 256
-
 

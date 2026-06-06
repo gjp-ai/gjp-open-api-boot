@@ -35,3 +35,8 @@ cms:
   base-url: ${CMS_BASE_URL:http://localhost:8084/api}
   upload:
     root-directory: ${CMS_UPLOAD_DIR:${user.home}/Data/gjp-api/upload}
+
+edu:
+  base-url: ${EDU_BASE_URL:${cms.base-url}}
+  upload:
+    root-directory: ${EDU_UPLOAD_DIR:${cms.upload.root-directory}}
