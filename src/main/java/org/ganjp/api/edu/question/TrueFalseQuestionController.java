@@ -49,4 +49,11 @@ public class TrueFalseQuestionController {
         return response == null ? ApiResponse.error(404, "True/false question not found", null)
                 : ApiResponse.success(response, "True/false question retrieved");
     }
+
+    @PatchMapping("/{id:[a-f0-9\\-]{36}}/favorite-tag")
+    public ApiResponse<EduQuestionResponse> toggleFavoriteTag(@PathVariable String id) {
+        EduQuestionResponse response = service.toggleFavoriteTag(id);
+        return response == null ? ApiResponse.error(404, "True/false question not found", null)
+                : ApiResponse.success(response, "True/false question favorite tag updated");
+    }
 }

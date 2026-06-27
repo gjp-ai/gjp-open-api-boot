@@ -49,4 +49,11 @@ public class FillBlankQuestionController {
         return response == null ? ApiResponse.error(404, "Fill blank question not found", null)
                 : ApiResponse.success(response, "Fill blank question retrieved");
     }
+
+    @PatchMapping("/{id:[a-f0-9\\-]{36}}/favorite-tag")
+    public ApiResponse<EduQuestionResponse> toggleFavoriteTag(@PathVariable String id) {
+        EduQuestionResponse response = service.toggleFavoriteTag(id);
+        return response == null ? ApiResponse.error(404, "Fill blank question not found", null)
+                : ApiResponse.success(response, "Fill blank question favorite tag updated");
+    }
 }

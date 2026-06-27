@@ -49,4 +49,11 @@ public class FreeTextQuestionController {
         return response == null ? ApiResponse.error(404, "Free text question not found", null)
                 : ApiResponse.success(response, "Free text question retrieved");
     }
+
+    @PatchMapping("/{id:[a-f0-9\\-]{36}}/favorite-tag")
+    public ApiResponse<EduQuestionResponse> toggleFavoriteTag(@PathVariable String id) {
+        EduQuestionResponse response = service.toggleFavoriteTag(id);
+        return response == null ? ApiResponse.error(404, "Free text question not found", null)
+                : ApiResponse.success(response, "Free text question favorite tag updated");
+    }
 }

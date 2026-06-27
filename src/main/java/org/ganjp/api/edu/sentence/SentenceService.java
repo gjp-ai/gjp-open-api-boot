@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ganjp.api.cms.util.CmsUtil;
 import org.ganjp.api.core.model.PaginatedResponse;
 import org.ganjp.api.edu.common.EduFileService;
+import org.ganjp.api.edu.common.EduFavoriteTagUtil;
 import org.ganjp.api.edu.common.EduLearningItemResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,6 +43,15 @@ public class SentenceService {
 
     public EduLearningItemResponse getSentenceById(String id) {
         return repository.findById(id).map(this::map).orElse(null);
+    }
+
+    @Transactional
+    public EduLearningItemResponse toggleFavoriteTag(String id) {
+        return repository.findById(id).map(s -> {
+            s.setTags(EduFavoriteTagUtil.toggleFavoriteTag(s.getTags(), s.getLang()));
+            s.setUpdatedAt(LocalDateTime.now());
+            return map(repository.save(s));
+        }).orElse(null);
     }
 
     public File getAudioFile(String filename) {

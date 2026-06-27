@@ -3,11 +3,13 @@ package org.ganjp.api.edu.question;
 import lombok.RequiredArgsConstructor;
 import org.ganjp.api.cms.util.CmsUtil;
 import org.ganjp.api.core.model.PaginatedResponse;
+import org.ganjp.api.edu.common.EduFavoriteTagUtil;
 import org.ganjp.api.edu.common.EduQuestionResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,5 +36,14 @@ public class FillBlankQuestionService {
 
     public EduQuestionResponse getQuestionById(String id) {
         return repository.findById(id).map(EduQuestionMapper::from).orElse(null);
+    }
+
+    @Transactional
+    public EduQuestionResponse toggleFavoriteTag(String id) {
+        return repository.findById(id).map(q -> {
+            q.setTags(EduFavoriteTagUtil.toggleFavoriteTag(q.getTags(), q.getLang()));
+            q.setUpdatedAt(LocalDateTime.now());
+            return EduQuestionMapper.from(repository.save(q));
+        }).orElse(null);
     }
 }

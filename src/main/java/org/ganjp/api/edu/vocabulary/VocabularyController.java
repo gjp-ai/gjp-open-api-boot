@@ -53,6 +53,13 @@ public class VocabularyController {
                 : ApiResponse.success(response, "Vocabulary retrieved");
     }
 
+    @PatchMapping("/{id:[a-f0-9\\-]{36}}/favorite-tag")
+    public ApiResponse<EduLearningItemResponse> toggleFavoriteTag(@PathVariable String id) {
+        EduLearningItemResponse response = service.toggleFavoriteTag(id);
+        return response == null ? ApiResponse.error(404, "Vocabulary not found", null)
+                : ApiResponse.success(response, "Vocabulary favorite tag updated");
+    }
+
     @GetMapping("/audios/{filename}")
     public ResponseEntity<FileSystemResource> viewAudio(@PathVariable String filename) {
         try {

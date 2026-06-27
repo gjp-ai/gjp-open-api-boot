@@ -49,4 +49,11 @@ public class MultipleChoiceQuestionController {
         return response == null ? ApiResponse.error(404, "Multiple choice question not found", null)
                 : ApiResponse.success(response, "Multiple choice question retrieved");
     }
+
+    @PatchMapping("/{id:[a-f0-9\\-]{36}}/favorite-tag")
+    public ApiResponse<EduQuestionResponse> toggleFavoriteTag(@PathVariable String id) {
+        EduQuestionResponse response = service.toggleFavoriteTag(id);
+        return response == null ? ApiResponse.error(404, "Multiple choice question not found", null)
+                : ApiResponse.success(response, "Multiple choice question favorite tag updated");
+    }
 }
