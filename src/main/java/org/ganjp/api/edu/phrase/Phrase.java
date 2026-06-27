@@ -31,7 +31,7 @@ public class Phrase extends EduBaseEntity {
     private String meaningClue;
     @Column(length = 300)
     private String meaning;
-    @Column(name = "easy_meaning", length = 128)
+    @Column(name = "easy_meaning", length = 200)
     private String easyMeaning;
     @Column(name = "sentence_one", length = 300)
     private String sentenceOne;
