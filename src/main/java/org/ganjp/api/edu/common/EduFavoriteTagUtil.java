@@ -14,6 +14,13 @@ public final class EduFavoriteTagUtil {
         return lang != null && "ZH".equals(lang.name()) ? CHINESE_FAVORITE_TAG : DEFAULT_FAVORITE_TAG;
     }
 
+    private static boolean isFavoriteTag(String tag, Enum<?> lang) {
+        if (lang != null && "ZH".equals(lang.name())) {
+            return CHINESE_FAVORITE_TAG.equals(tag);
+        }
+        return "Favorite".equalsIgnoreCase(tag) || "Favourite".equalsIgnoreCase(tag);
+    }
+
     public static String toggleFavoriteTag(String tags, Enum<?> lang) {
         String favoriteTag = tagForLanguage(lang);
         LinkedHashSet<String> tagSet = Arrays.stream((tags == null ? "" : tags).split(","))
@@ -21,7 +28,7 @@ public final class EduFavoriteTagUtil {
                 .filter(tag -> !tag.isEmpty())
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         String existingTag = tagSet.stream()
-                .filter(tag -> tag.equalsIgnoreCase(favoriteTag))
+                .filter(tag -> isFavoriteTag(tag, lang))
                 .findFirst()
                 .orElse(null);
         if (existingTag == null) {
